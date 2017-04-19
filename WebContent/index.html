@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Put This In Your Face Dot Com</title>
+	<meta charset="utf-8"></meta>
+
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+	<script>
+
+        function Go(){//initial function ran after loading
+        	//perform initial search 
+            search("","all","dish");
+        }
+
+        //call search_api.jsp, sending it the search to be performed
+        function search(searchTerm,searchType,searchFor){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onloadend = function(){ processData(xhttp); }
+            xhttp.val_searchTerm = spacesToPluses(apostropheReplacer(searchTerm));
+            xhttp.val_originalSearchTerm = searchTerm;
+            xhttp.val_searchType = searchType;
+            xhttp.val_searchFor = searchFor;
+            xhttp.open('get',"./search_api.jsp?searchTerm="+searchTerm+"&searchType="+searchType+"&searchFor="+searchFor,true);
+            xhttp.send();
+        }
+
+        function updateSearch(){//perform search now that the text box, or search settings have changed
+            var searchTerm = document.getElementById('searchTermBox').value;
+            var searchType = document.getElementById('searchTypeSelector').value;
+            var searchFor = document.getElementById('searchForSelector').value;
+
+            search(searchTerm,searchType,searchFor);
+        }
+        
+
+        function processData(xhttp){
+        	//update search box and settings
+        		document.getElementById('searchTermBox').value = xhttp.val_originalSearchTerm;
+        	
+        		document.getElementById('searchTypeSelector_all').removeAttribute('selected');
+        		document.getElementById('searchTypeSelector_dishName').removeAttribute('selected');
+        		document.getElementById('searchTypeSelector_dishDescription').removeAttribute('selected');
+        		document.getElementById('searchTypeSelector_restaurantName').removeAttribute('selected');
+        		document.getElementById('searchTypeSelector_restaurantAddress').removeAttribute('selected');
+        	
+        		document.getElementById('searchTypeSelector_'+xhttp.val_searchType).setAttribute('selected','selected');
+        		
+        		document.getElementById('searchForSelector_dish').removeAttribute('selected');
+        		document.getElementById('searchForSelector_restaurant').removeAttribute('selected');
+        	
+        		document.getElementById('searchForSelector_'+xhttp.val_searchFor).setAttribute('selected','selected');	
+        	
+        	//extract JSON data and clear whatever was being shown	
+	            var data = JSON.parse(xhttp.responseText);
+	            document.getElementById('searchResults').innerHTML = "";
+
+	        //depending on what was being searched for, produce cards for the results
+	            switch(xhttp.val_searchFor){
+	                case "dish": 
+	                    for(var a = 0; a < data.length; a+=2){
+	                        var article = document.createElement('article');
+	                            article.setAttribute('class','card cardHover');
+	                            article.setAttribute('onclick','search("' +data[a+1].name+ '", "restaurantName", "restaurant")');
+	
+	                        var title = document.createElement('h2');
+	                            title.setAttribute('class','searchResult_title');
+	                            title.innerHTML = data[a].name;
+	                        var restaurantName = document.createElement('h3');
+	                            restaurantName.setAttribute('class','searchResult_restaurantName');
+	                            restaurantName.innerHTML = data[a+1].name;
+	                        var description = document.createElement('p');
+	                            description.setAttribute('class','searchResult_description');
+	                            description.innerHTML = data[a].description;
+	                        var price = document.createElement('p');
+	                            price.setAttribute('class','searchResult_price');
+	                            price.innerHTML = "€" + coinageTocost(data[a].price);
+	
+	                        article.appendChild(title);   
+	                        article.appendChild(restaurantName);              
+	                        article.appendChild(description);
+	                        article.appendChild(price);
+	                         
+	                        document.getElementById('searchResults').appendChild(article);
+	                    }
+	                break;
+	                case "restaurant":
+	                    for(var a = 0; a < data.length; a++){
+	                        var article = document.createElement('article');
+	                            article.setAttribute('class','card cardHover');
+	                            article.setAttribute('onclick','search("' +data[a].name+ '", "restaurantName", "dish")');
+	
+	                        var restaurantName = document.createElement('h2');
+	                            restaurantName.setAttribute('class','searchResult_restaurantName');
+	                            restaurantName.innerHTML = data[a].name;
+	                        var address = document.createElement('p');
+	                            address.setAttribute('class','searchResult_address');
+	                            address.innerHTML = data[a].address;
+	                        var email = document.createElement('p');
+	                            email.setAttribute('class','searchResult_email');
+	                            email.innerHTML = data[a].email;
+	
+	                        article.appendChild(restaurantName);
+	                        article.appendChild(address);
+	                        article.appendChild(email);
+	                         
+	                        document.getElementById('searchResults').appendChild(article);
+	                    }
+	                break;
+	                default:
+	                	console.log("Search error");
+	                    console.log(data);
+	                break;
+	            }
+	
+	        	//if there were no results, produce "no results" card
+	            if(data.length == 0){
+	                var article = document.createElement('article');
+	                    article.setAttribute('class','card');
+	
+	                var NRF = document.createElement('p');
+	                    NRF.setAttribute('class','searchResult_price');
+	                    NRF.innerHTML = "no results found";
+	
+	                article.appendChild(NRF);
+	                    
+	                document.getElementById('searchResults').appendChild(article);
+	            }
+            
+        }
+
+        //tools for perparing stings for use in a URL and for converting from coinage values
+		function apostropheReplacer(string){
+			for(var a = 0; a < string.length; a++){
+				if(string[a] == "'"){
+					string = string.slice(0,a) + "%27" + string.slice(a+1,string.length);
+				}
+			}
+			return string;
+		}
+		
+        function spacesToPluses(string){ return string.split(" ").join("+"); }
+        function coinageTocost(coinage){ return (parseInt(coinage)/100).toFixed(2); }
+
+    </script>
+</head>
+
+<body onLoad="Go()">
+	
+	<!-- hover section, followed by identical spacer -->
+	    <section id='header' class='float'>
+	        <table cellspacing='0' style='padding: 0% 1%; width: 100%;'><tr>
+	            <td> <h1 class='mainTitle' onclick='search("","all","dish");'>Put This In Your Face</h1> </td>
+	            <td style='width: 70px;'> <a href='./login.html' class='button'>sign in</a> </td>
+	            <td style='width: 70px;'> <a href='./createAccount.html' class='button'>sign up</a> </td>
+	        </tr></table>
+	    </section>
+	    <section id='header'>
+	        <table cellspacing='0'style='padding: 0% 1%; width: 100%;'><tr>
+	            <td> <h1 class='mainTitle' onclick='search("","all","dish");'>Put This In Your Face</h1> </td>
+	            <td style='width: 70px;'> <a href='./login.html' class='button'>sign in</a> </td>
+	            <td style='width: 70px;'> <a href='./createAccount.html' class='button'>sign up</a> </td>
+	        </tr></table>
+	    </section>
+	    
+	<!-- search box and search details -->
+	    <input type="text" id="searchTermBox" name="updateSearch" placeholder='search' autocomplete="off" onkeyup="updateSearch()">
+	    <table id='searchDetailsTable' cellspacing="0" >
+	        <tr>
+	            <td>
+	                <select id='searchTypeSelector' onchange='updateSearch()'>
+	                    <option id='searchTypeSelector_all' value="all">All</option>
+	                    <option id='searchTypeSelector_dishName' value="dishName">Dish Name</option>
+	                    <option id='searchTypeSelector_dishDescription' value="dishDescription">Dish Description</option>
+	                    <option id='searchTypeSelector_restaurantName' value="restaurantName">Restaurant Name</option>
+	                    <option id='searchTypeSelector_restaurantAddress' value="restaurantAddress">Location</option>
+	                </select>
+	            </td>
+	            <td>
+	                <select id='searchForSelector' onchange='updateSearch()'>
+	                    <option id='searchForSelector_dish' value="dish">Dishes</option>
+	                    <option id='searchForSelector_restaurant' value="restaurant">Restaurants</option>
+	                </select> 
+	            </td>
+	        </tr>
+	    </table>
+	    
+	<!-- results section -->
+	    <section id='searchResults'></section>
+
+</body>
+</html>

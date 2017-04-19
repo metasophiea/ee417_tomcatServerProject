@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Create Account</title>
+	<meta charset="utf-8"></meta>
+
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+    <script>
+        function Go(){//initial function ran after loading
+        	//look for error message in the URL, and display the correct text messgae if one is found
+            document.getElementById('errorMessage').innerHTML = "";
+            var url = window.location.href;
+            if(url.split("?").length <= 1){return;}
+
+            url = url.split("?")[url.split("?").length-1];
+
+            switch(url[6]){
+                case "1":
+                    document.getElementById('errorMessage').innerHTML = "incorrect username or password";
+                break;
+            }
+
+        }
+    </script>
+</head>
+
+<body onLoad="Go()">
+
+    <section class='card' style='text-align:center;'>
+        <h1 class='mainTitle'>Login</h1>
+        <form method='POST' action='./loginManager' name='loginForm'>
+            <p class='formInputText'>username: <input id='formInput_restname' type='text' name='restname'/></p>
+            <p class='formInputText'>password: <input id='formInput_password' type='password' name='password'/></p>
+            <input class='button' type='submit' value='login'/>
+        </form>
+        <p id='errorMessage' class='errorMessage'></p>
+    </section>
+
+</body>
+</html>

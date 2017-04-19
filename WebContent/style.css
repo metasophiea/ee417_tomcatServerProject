@@ -1,0 +1,135 @@
+html, body{
+    width:100%; height:100%; margin:0px;
+}
+
+/* header */
+.mainTitle{
+    font-family: 'Raleway', sans-serif;
+    margin: 0px;
+}
+#header{
+    width: 100%;
+    background-color:rgba(240,240,240,1);
+    padding: 0.8% 0%;
+}
+.float{
+    position: fixed;
+    left: 0px;
+    top: 0px;
+}
+
+/* search */
+#searchTermBox{
+    width:50%;
+    border:0px;
+    padding: 1% 1%;
+    margin: 1% auto;
+    background-color:rgba(240,240,240,1);
+    display: block;
+    color:rgb(100,100,100);
+    font-size:18px;
+}
+#searchDetailsTable{
+    width: 50%;
+    margin: 1% auto;
+}
+
+#searchTypeSelector{
+    width: 100%;
+    border:0px;
+    padding: 1% 1%;
+    margin: 1% auto;
+    background-color:rgba(240,240,240,1);
+    display: block;
+    color:rgb(100,100,100);
+    font-size:18px;
+}
+#searchForSelector{
+    width: 100%;
+    border:0px;
+    padding: 1% 1%;
+    margin: 1% auto;
+    background-color:rgba(240,240,240,1);
+    display: block;
+    color:rgb(100,100,100);
+    font-size:18px;
+}
+
+/* search results */
+.card{
+    background-color: rgba(250,250,250,1);
+    max-width: 50%;
+    padding: 1% 1%;
+    margin: 1% auto;
+    transition: background-color 0.5s;
+}
+.cardHover{}
+.cardHover:hover{
+    background-color:rgba(255,220,255,1);
+}
+.searchResult_title{
+    font-family: 'Raleway', sans-serif;
+    margin: 0px;
+}
+.searchResult_restaurantName{
+    font-family: 'Raleway', sans-serif;
+    margin: 0px;
+}
+.searchResult_description{
+    font-family: 'Raleway', sans-serif;
+    margin: 0px;
+}
+.searchResult_price{
+    font-family: 'Raleway', sans-serif;
+    font-style: italic;
+    margin: 0px;
+}
+.searchResult_address{
+    font-family: 'Raleway', sans-serif;
+    margin: 0px;
+}
+.searchResult_email{
+    font-family: 'Raleway', sans-serif;
+    font-style: italic;
+    margin: 0px;
+}
+
+/* input */
+.formInputText{
+    font-family: 'Raleway', sans-serif;
+    margin: 1%;
+}
+.errorMessage{
+    color:rgba(240,100,100,1);
+    font-family: 'Raleway', sans-serif;
+    margin: 1%;
+}
+.button{
+    color: rgba(0,0,0,1);
+    text-decoration:none;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    margin: 1px;
+    border: 0px;
+    padding: 5px;
+    background-color:rgba(220,220,220,1);
+    transition: background-color 0.25s;
+}
+.button:hover{
+    background-color:rgba(240,240,240,1);
+}
+.dangerButton{
+    color: rgba(0,0,0,1);
+    text-decoration:none;
+    font-family: 'Raleway', sans-serif;
+    font-size: 16px;
+    margin: 1px;
+    border: 0px;
+    padding: 5px;
+    background-color:rgba(220,220,220,1);
+    transition: background-color 0.25s;
+}
+.dangerButton:hover{
+    background-color:rgba(255,200,200,1);
+}
+

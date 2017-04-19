@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>Create Account</title>
+	<meta charset="utf-8"></meta>
+
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
+	<script>
+	    function Go(){//initial function ran after loading
+        	//look for an error message in the URL, and display the correct text messgae if one is found
+	        document.getElementById('errorMessage').innerHTML = "";
+	        var url = window.location.href;
+	        if(url.split("?").length <= 1){return;}
+	
+	        url = url.split("?")[url.split("?").length-1];
+	
+	        switch(url[8]){
+	        	case "1": document.getElementById('errorMessage').innerHTML = "username missing"; break;
+	            case "2": document.getElementById('errorMessage').innerHTML = "restaurant name missing"; break;
+	            case "3": document.getElementById('errorMessage').innerHTML = "e-mail missing"; break;
+	            case "4": document.getElementById('errorMessage').innerHTML = "password missing"; break;
+	            case "5": document.getElementById('errorMessage').innerHTML = "only number, the letters A-Z and underscore are allowed in usernames"; break;
+	            case "6": document.getElementById('errorMessage').innerHTML = "your email's going to need both an '@' symbol and '.' in there somewhere"; break;
+	        }
+	
+	    }
+	
+	  	//validy check
+        function check(){
+            document.getElementById('errorMessage').innerHTML = "";
+
+            //check if the restname contains only letters, numbers and underscores
+            if( (new RegExp("[^a-zA-Z0-9_]")).test(document.getElementById('formInput_restname').value) && document.getElementById('formInput_restname').value.length != 0 ){
+                document.getElementById('errorMessage').innerHTML = "only number, the letters A-Z and underscore are allowed in usernames";
+                return;
+            }
+
+          	//check if the email has '@' and dot symbols
+            if( !(new RegExp(".@")).test(document.getElementById('formInput_email').value) && document.getElementById('formInput_email').value.length != 0 ){
+                document.getElementById('errorMessage').innerHTML = "your email's going to need both an '@' symbol and '.' in there somewhere";
+                return;
+            }
+            
+            //check if restname is available
+            checkIfRestnameIsAvailable(document.getElementById('formInput_restname').value);
+        }
+
+	  	//function calling checkRestnameAvailability_api.jsp with the restname
+        function checkIfRestnameIsAvailable(name){
+            var xhttp = new XMLHttpRequest();
+            xhttp.onloadend = function(){ checkRestnameAvailability(xhttp); }
+            xhttp.open('get',"./checkRestnameAvailability_api.jsp?restname="+name,true);
+      	  	xhttp.send();
+        }
+
+	  	//callback function for above
+        function checkRestnameAvailability(xhttp){
+            var data = JSON.parse(xhttp.responseText);
+            if(data.result == "taken"){ document.getElementById('restname_errorMessage').innerHTML = "restname unavailable"; }
+            else{document.getElementById('restname_errorMessage').innerHTML = "";}
+        }
+
+    </script>
+</head>
+
+<body onload='Go()'>
+
+    <section class='card' style='text-align:center;'>
+        <h1 class='mainTitle'>Create Account</h1>
+        <p class='formInputText' style='font-style: italic;'>Are you a restaurant wanting access to millions of new customers? You might wanna sign up on JustEat.com; but if you need a more relaxed pace of buisness, you've come to the right place</p>
+        <form method='POST' action='./addRestaurantManager' name='newRestaurantForm' onchange='check()'>
+            <p class='formInputText'>Name: <input id='formInput_name' type='text' name='name'/></p>
+            <p class='formInputText'>Address: <input id='formInput_address' type='text' name='address'/></p>
+            <p class='formInputText'>Unique Username: <input id='formInput_restname' type='text' name='restname'/> <span id='restname_errorMessage' style='margin:none;' class='errorMessage'></span> </p>
+            <p class='formInputText'>e-mail: <input id='formInput_email' type='text' name='email'/></p>
+            <p class='formInputText'>Password: <input id='formInput_password' type='password' name='password'/></p>
+            <input class='button' type='submit' value='create'/>
+        </form>
+        <p id='errorMessage' class='errorMessage'></p>
+    </section>
+
+</body>
+</html>

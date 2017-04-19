@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>The Report</title>
+	
+	<style>
+		html{margin: 10px;}
+		body{margin: 10px;}
+		h2{
+		    font-family: 'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-weight: normal; 
+			margin: 0px;
+		}
+		h3{
+			font-family: 'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-weight: lighter;
+			font-style: italic;
+			margin: 0px;
+		}
+		p{
+			font-family: 'Helvetica Neue Light', 'HelveticaNeue-Light', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+			font-size: 15px;
+			margin: 0px;
+		}
+
+	</style>
+	
+</head>
+
+<body>
+
+	<h2>Web Applications Development Assignment</h2>
+	<h3>Brandon Walsh - 13428222</h3>
+	<br/>
+	
+	<h2>Functionality</h2>
+	<p>
+		This site allows people to publish their restaurant's available dishes onto the web for people to search through. One can sign up to the site and upload dish details; then on a publicly accessible search site, search through these and other dishes by name, restaurant name, dish description, etc. One can also search through different restaurants by the same criteria and choose to display all the dishes from a single restaurant
+	</p>
+	<pre>
+	Sample login: joescafe 
+	password: password1</pre>
+	<p>For best results, please use the Google Chrome browser</p>
+	<br/>
+	
+	<h2>Extra Stuff</h2>
+	<h3>Validation</h3>
+	<p>Mostly every opportunity a user has to input some data is covered by input validation on both the client and server side. JavaScript functions check over values for every keyUp and onChange. If bad data manages to get through to the server (and is caught) the server will throw back to the page with extra data in the URL that additional JS can read and notify the user of input errors with.</p>
+	<h3>Search API</h3>
+	<p>Instead of having a single page for searching; the home page uses a search API jsp page, which can take terms and options in the URL and return a JSON string, with which the home page produces HTML. In this way; the search API can be used in other parts of the site, including any external site or potential app that might wish to search through this site's database.</p>
+	<h3>databaseConnect</h3>
+	<p>In class, our lecturer David Molloy spoke about the difficulties of having a site tied closely to it's database, which could lead to major work if someone decided to switch which database the site used. With this in mind - and a desire to reduce copied code as much as possible - I have developed the databaseConnect package, which abstracts the connection and communication routines into a class of simple "getObject" and "setObject" functions. These functions are abstracted further, and tailored more to the site's needs into functions such as "getDish" or "findNextDishId". Additionally, this package contains functions that can take the basic object files of this site - dish and restaurant - and produce JSON strings, allowing for much shorter code elsewhere.</p>
+	<br/>
+	
+	<h2>SQL Table Creation Code</h2>
+	<pre>
+	create table ee_user.walshb43_PTIYF_restaurant(
+		restname varchar(50) not null,
+		name varchar(50),
+		address varchar(50),
+		email varchar(50) not null,
+		password varchar(50) not null,
+	
+		primary key(restname)
+	)
+
+	insert into ee_user.walshb43_PTIYF_restaurant values ('joescafe','Joe''s Cafe','1, Bluebottle Road, Cityington','joe@joescafe.com','password1')
+	insert into ee_user.walshb43_PTIYF_restaurant values ('rits','The Rits','2, Fancy Street, Cityington','admin@ritsrest.com','1234')
+	insert into ee_user.walshb43_PTIYF_restaurant values ('garago','Garago''s Mexican','Somewhere in Mexico','manuel@garago.mx','hellofood')
+	insert into ee_user.walshb43_PTIYF_restaurant values ('HHOP','Harry''s House Of Pancakes','Downtown','harry@gmail.mx','pan1234')
+
+	create table ee_user.walshb43_PTIYF_dish(
+		id integer not null,
+		restname varchar(50) not null,
+		name varchar(50),
+		price integer,
+		description varchar(300),
+	
+		primary key(id),
+	
+		constraint constraint
+			foreign key(restname)
+			references ee_user.walshb43_PTIYF_restaurant
+			on delete cascade
+	)
+
+	insert into ee_user.walshb43_PTIYF_dish values (0,'joescafe','Tea','400','It''s just tea really')
+	insert into ee_user.walshb43_PTIYF_dish values (1,'joescafe','Toast','500','It goes with your tea')
+	insert into ee_user.walshb43_PTIYF_dish values (2,'joescafe','Bun','200','It''s a bun...there''s not much else to say really')
+	insert into ee_user.walshb43_PTIYF_dish values (3,'joescafe','Juice','250','It''s got apple and mango and stuff')
+	insert into ee_user.walshb43_PTIYF_dish values (4,'rits','Posh Fish','50000','It''s just fish with some apple that we''ve made into a paste')
+	insert into ee_user.walshb43_PTIYF_dish values (5,'rits','Chicken Suprem','45000','This is KFC we got from around the corner, with some more salt on it')
+	insert into ee_user.walshb43_PTIYF_dish values (6,'rits','Wine','2000','You can have white or red (so long as it''s white)')
+	insert into ee_user.walshb43_PTIYF_dish values (7,'HHOP','Pancakes','300','The classic')
+	insert into ee_user.walshb43_PTIYF_dish values (9,'HHOP','Sirup','50','For putting on the pancakes')
+	insert into ee_user.walshb43_PTIYF_dish values (10,'HHOP','A fork','50','Yeah, times are tough over here')
+	insert into ee_user.walshb43_PTIYF_dish values (11,'garago','Burrito','450','They''re fresh, because we eat the ones laying around')
+	insert into ee_user.walshb43_PTIYF_dish values (12,'garago','Sode','250','Like Soda, but spelt wrong')
+	</pre>
+
+</body>
+</html>
